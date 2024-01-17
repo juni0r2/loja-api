@@ -1,5 +1,6 @@
 package br.com.microservice.loja.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,13 @@ import br.com.microservice.loja.controller.dto.InfoFornecedorDTO;
 @Service
 public class CompraService {
 
+	@Autowired
+	private RestTemplate client;
+	
 	public void realizaCompra(CompraDTO compra) {
 
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<InfoFornecedorDTO> response = restTemplate.exchange("http://localhost:8081/info/"+compra.getEndereco().getEstado(), HttpMethod.GET, 
-				null, InfoFornecedorDTO.class);
+		ResponseEntity<InfoFornecedorDTO> response = this.client.exchange("http://fornecedor/info/"+compra.getEndereco().getEstado(), 
+				HttpMethod.GET, null, InfoFornecedorDTO.class);
 		System.out.println(response.getBody().getEndereco());
 	}
 
